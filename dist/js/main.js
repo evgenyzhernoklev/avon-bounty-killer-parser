@@ -34052,6 +34052,8 @@ function () {
             self.renderAsSingle(self.group);
           }
         }
+
+        self.group = [];
       };
 
       array.forEach(function (item, index, array) {
@@ -34063,7 +34065,6 @@ function () {
 
         if (item.length == 0) {
           checkRender();
-          self.group = [];
         } else if (item.length == 1) {
           checkRender();
 
@@ -34072,29 +34073,30 @@ function () {
           } else {
             self.parseAsTitle(item);
           }
-
-          self.group = [];
         } else if (array[index - 1]) {
           if (self.is_oneGroup(array[index - 1], array[index])) {
             self.group.push(item);
 
             if (index == array.length - 1) {
+              // если мы на последней строке
               self.renderAsGroup(self.group);
             }
           } else {
             checkRender();
-            self.group = [];
             self.group.push(item);
 
             if (index == array.length - 1) {
+              // если мы на последней строке
               self.renderAsSingle(self.group);
             }
           }
         }
-      });
+      }); // if we remain nav empty there will be some error during server parsing
+      // and it won't show any goods
+      // => remove "nav" key if there's only one tab
 
       if (this.bountyKillersData["nav"].length < 2) {
-        this.bountyKillersData["nav"] = [];
+        delete this.bountyKillersData["nav"];
       }
 
       this.prepareFile();
@@ -34107,7 +34109,7 @@ function () {
 
       var title = item[0],
           condition = "";
-      condition = title.search(/:|!/i);
+      condition = title.search(/!/i);
       condition = title.slice(condition + SPACE);
       this.bountyKillersData["killers"][this.current_tab]["condition"] = condition;
     }
@@ -34118,7 +34120,7 @@ function () {
 
       var text = item[0],
           hash = "",
-          tab_name_end_position = text.search(/\.|:/i),
+          tab_name_end_position = text.search(/:/i),
           tab_name = text.slice(0, tab_name_end_position),
           title = "",
           condition = "";
@@ -34127,9 +34129,9 @@ function () {
         text = text.slice(tab_name_end_position + SPACE);
       }
 
-      var title_end_position = text.search(/\./i);
+      var title_end_position = text.search(/\./i); // есть точка, и она не последний символ строки
 
-      if (title_end_position > 0) {
+      if (title_end_position > 0 && title_end_position != text.length - 1) {
         title = text.slice(0, title_end_position + SPACE / 2);
         condition = text.slice(title_end_position + SPACE);
       } else {
@@ -34152,11 +34154,20 @@ function () {
 
         case "Уход за лицом":
         case "Средства по уходу за лицом":
+        case "Уход за телом и лицом":
           hash = "face";
           break;
 
         case "Мода и стиль":
           hash = "style";
+          break;
+
+        case "Мастера Бижутерии":
+          hash = "jewelery";
+          break;
+
+        default:
+          hash = "goods";
           break;
       }
 
@@ -34197,14 +34208,7 @@ function () {
   }, {
     key: "is_oneGroup",
     value: function is_oneGroup(item_prev, item) {
-      var is_oneGroup = true;
-
-      if (item_prev[1] != item[1] || item_prev[3] != item[3] || item_prev[10] != item[10]) {
-        // profile code, name, actual cost
-        is_oneGroup = false;
-      }
-
-      return is_oneGroup;
+      return item_prev[1] == item[1]; // checkig profile code
     }
   }, {
     key: "renderAsGroup",

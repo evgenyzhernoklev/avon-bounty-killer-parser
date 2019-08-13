@@ -3,15 +3,15 @@
 import XLSX   from "xlsx";
 import Parser from "./parser.js";
 
-let form    = document.body.querySelector('.form'),
-    field   = form.querySelector('.form__field');
+let form  = document.body.querySelector('.form'),
+    field = form.querySelector('.form__field');
 
 function to_json(workbook) {
   var result = {};
 
   workbook.SheetNames.forEach(function(sheetName) {
-    var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {header:1});
-    if(roa.length) result[sheetName] = roa;
+    var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {header: 1});
+    if (roa.length) result[sheetName] = roa;
   });
   return JSON.stringify(result, 2, 2);
 };

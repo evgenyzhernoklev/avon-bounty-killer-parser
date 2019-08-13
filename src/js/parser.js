@@ -8,12 +8,8 @@ class Parser {
         "title": "",
         "subtitle": ""
       },
-      "nav": [
-
-      ],
-      "killers": [
-
-      ]
+      "nav": [],
+      "killers": []
     };
     this.current_tab = -1;
     this.group = [];
@@ -35,6 +31,8 @@ class Parser {
               self.renderAsSingle(self.group);
             }
           }
+
+          self.group = [];
         };
 
     array.forEach(function(item, index, array) {
@@ -44,7 +42,6 @@ class Parser {
 
       if (item.length == 0) {
         checkRender();
-        self.group = [];
       } else if (item.length == 1) {
         checkRender();
 
@@ -53,29 +50,29 @@ class Parser {
         } else {
           self.parseAsTitle(item);
         }
-
-        self.group = [];
       } else if (array[index - 1]) {
         if (self.is_oneGroup(array[index - 1], array[index])) {
           self.group.push(item);
 
-          if (index == (array.length - 1)) {
+          if (index == (array.length - 1)) { // если мы на последней строке
             self.renderAsGroup(self.group);
           }
         } else {
           checkRender();
-          self.group = [];
           self.group.push(item);
 
-          if (index == (array.length - 1)) {
+          if (index == (array.length - 1)) { // если мы на последней строке
             self.renderAsSingle(self.group);
           }
         }
       }
     });
 
+    // if we remain nav empty there will be some error during server parsing
+    // and it won't show any goods
+    // => remove "nav" key if there's only one tab
     if (this.bountyKillersData["nav"].length < 2) {
-      this.bountyKillersData["nav"] = [];
+      delete this.bountyKillersData["nav"];
     }
 
     this.prepareFile();
@@ -87,7 +84,7 @@ class Parser {
     let title = item[0],
         condition = "";
 
-    condition = title.search( /:|!/i );
+    condition = title.search( /!/i );
     condition = title.slice(condition + SPACE);
     this.bountyKillersData["killers"][this.current_tab]["condition"] = condition;
   }
@@ -96,7 +93,7 @@ class Parser {
     const SPACE = 2; // symbol + space
     let text = item[0],
         hash = "",
-        tab_name_end_position = text.search( /\.|:/i ),
+        tab_name_end_position = text.search( /:/i ),
         tab_name = text.slice(0, tab_name_end_position),
         title = "",
         condition = "";
@@ -107,7 +104,8 @@ class Parser {
 
     let title_end_position = text.search( /\./i );
 
-    if (title_end_position > 0) {
+    // есть точка, и она не последний символ строки
+    if (title_end_position > 0 && title_end_position != (text.length - 1)) {
       title = text.slice(0, title_end_position + SPACE/2);
       condition = text.slice(title_end_position + SPACE);
     } else {
@@ -127,10 +125,17 @@ class Parser {
         break;
       case "Уход за лицом":
       case "Средства по уходу за лицом":
+      case "Уход за телом и лицом":
         hash = "face";
         break;
       case "Мода и стиль":
         hash = "style";
+        break;
+      case "Мастера Бижутерии":
+        hash = "jewelery";
+        break;
+      default:
+        hash = "goods"
         break;
     }
 
@@ -147,9 +152,7 @@ class Parser {
           "title": title,
           "condition": condition,
           "rows": 3,
-          "offers": [
-
-          ]
+          "offers": []
         }
       ],
       "condition": ""
@@ -169,22 +172,14 @@ class Parser {
       "title": title,
       "condition": condition,
       "rows": 3,
-      "offers": [
-
-      ]
+      "offers": []
     };
 
     this.bountyKillersData["killers"][this.current_tab]["lines"].push(new_subsection);
   }
 
   is_oneGroup(item_prev, item) {
-    let is_oneGroup = true;
-
-    if (item_prev[1] != item[1] || item_prev[3] != item[3] || item_prev[10] != item[10]) { // profile code, name, actual cost
-      is_oneGroup = false;
-    }
-
-    return is_oneGroup;
+    return item_prev[1] == item[1]; // checkig profile code
   }
 
   renderAsGroup(group) {
@@ -211,8 +206,7 @@ class Parser {
     }
 
     let item_list = {
-      "ln": [
-      ],
+      "ln": [],
       "price": {
           "actualCostRub": item_rendering[10],
           "oldCostRub": item_rendering[8]
@@ -221,8 +215,7 @@ class Parser {
       "variants": {
           "title": title,
           "chosenTitle": chosenTitle,
-          "variantsText": [
-          ]
+          "variantsText": []
       },
       "description": item_rendering[4] || "",
       "label": item_rendering[12],

@@ -34149,12 +34149,12 @@ function () {
           break;
 
         case "Уход":
+        case "Уход за телом и лицом":
           hash = "care";
           break;
 
         case "Уход за лицом":
         case "Средства по уходу за лицом":
-        case "Уход за телом и лицом":
           hash = "face";
           break;
 

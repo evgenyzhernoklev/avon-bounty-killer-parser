@@ -209,7 +209,7 @@ class Parser {
       "ln": [],
       "price": {
           "actualCostRub": item_rendering[10],
-          "oldCostRub": item_rendering[8]
+          "oldCostRub": item_rendering[8] || ""
       },
       "variantsType": item_type,
       "variants": {
@@ -246,7 +246,7 @@ class Parser {
     let item_single = {
       "price": {
         "actualCostRub": item_rendering[10],
-        "oldCostRub": item_rendering[8]
+        "oldCostRub": item_rendering[8] || ""
       },
       "description": item_rendering[4] || "",
       "ln": item_rendering[0],

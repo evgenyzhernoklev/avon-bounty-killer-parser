@@ -179,12 +179,12 @@ class Parser {
   }
 
   is_oneGroup(item_prev, item) {
-    return item_prev[1] == item[1]; // checkig profile code
+    return item_prev[1] == item[1]; // checking profile code
   }
 
   renderAsGroup(group) {
     let item_rendering = group[0],
-        item_type = item_rendering[6],
+        item_type = item_rendering[6] || "",
         title = "",
         chosenTitle = "";
 
@@ -205,11 +205,17 @@ class Parser {
         break;
     }
 
+    let item_price_actual = item_rendering[10] || "",
+        item_price_old    = item_rendering[8]  || "",
+        item_description  = item_rendering[4]  || "",
+        item_label        = item_rendering[12] || "",
+        item_title_bold   = item_rendering[3]  || "";
+
     let item_list = {
       "ln": [],
       "price": {
-          "actualCostRub": item_rendering[10],
-          "oldCostRub": item_rendering[8] || ""
+          "actualCostRub": String(item_price_actual).trim(),
+          "oldCostRub": String(item_price_old).trim()
       },
       "variantsType": item_type,
       "variants": {
@@ -217,13 +223,13 @@ class Parser {
           "chosenTitle": chosenTitle,
           "variantsText": []
       },
-      "description": item_rendering[4] || "",
-      "label": item_rendering[12],
-      "boldTitle": item_rendering[3] || ""
+      "description": String(item_description).trim(),
+      "label": String(item_label).trim(),
+      "boldTitle": String(item_title_bold).trim()
     };
 
     group.forEach(function(item, index, group) {
-      item_list["ln"].push(item[0]);
+      item_list["ln"].push(String(item[0]).trim());
       item_list["variants"]["variantsText"].push(item[6]);
     });
 
@@ -243,15 +249,22 @@ class Parser {
       return false;
     }
 
+    let item_price_actual = item_rendering[10] || "",
+        item_price_old    = item_rendering[8]  || "",
+        item_description  = item_rendering[4]  || "",
+        item_ln           = item_rendering[0]  || "",
+        item_label        = item_rendering[12] || "",
+        item_title_bold   = item_rendering[3]  || "";
+
     let item_single = {
       "price": {
-        "actualCostRub": item_rendering[10],
-        "oldCostRub": item_rendering[8] || ""
+        "actualCostRub": String(item_price_actual).trim(),
+        "oldCostRub": String(item_price_old).trim()
       },
-      "description": item_rendering[4] || "",
-      "ln": item_rendering[0],
-      "label": item_rendering[12],
-      "boldTitle": item_rendering[3] || ""
+      "description": String(item_description).trim(),
+      "ln": String(item_ln).trim(),
+      "label": String(item_label).trim(),
+      "boldTitle": String(item_title_bold).trim()
     };
     let lines_array = this.bountyKillersData["killers"][this.current_tab]["lines"];
     lines_array[lines_array.length - 1]["offers"].push(item_single);

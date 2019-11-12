@@ -184,7 +184,7 @@ class Parser {
 
   renderAsGroup(group) {
     let item_rendering = group[0],
-        item_type = item_rendering[6] || "",
+        item_type = String(item_rendering[6]) || "",
         title = "",
         chosenTitle = "";
 
@@ -229,8 +229,10 @@ class Parser {
     };
 
     group.forEach(function(item, index, group) {
+      let variants_text = item[6] || "";
+
       item_list["ln"].push(String(item[0]).trim());
-      item_list["variants"]["variantsText"].push(item[6]);
+      item_list["variants"]["variantsText"].push(String(variants_text).trim());
     });
 
     let lines_array = this.bountyKillersData["killers"][this.current_tab]["lines"];

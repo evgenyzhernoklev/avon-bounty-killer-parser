@@ -184,25 +184,26 @@ class Parser {
 
   renderAsGroup(group) {
     let item_rendering = group[0],
-        item_type = String(item_rendering[6]) || "",
+        item_type = String(item_rendering[5]).trim().toLowerCase() || "",
         title = "",
         chosenTitle = "";
 
-    if ( item_type.search(/\d/) != -1 ) {
-      item_type = "sizes";
-    } else {
-      item_type = "colors";
-    }
-
     switch(item_type) {
-      case "sizes":
-        title = "Размеры";
-        chosenTitle = "Выбранный размер";
-        break;
-      case "colors":
-        title = "Оттенки";
+      case "цвет":
+      case "оттенок":
+        item_type   = "colors";
+        title       = "Оттенки";
         chosenTitle = "Выбранный оттенок";
         break;
+      case "размер":
+        item_type   = "sizes";
+        title       = "Размеры";
+        chosenTitle = "Выбранный размер";
+      break;
+      case "состав набора":
+        item_type   = "set";
+        title       = "Состав набора";
+      break;
     }
 
     let item_price_actual = item_rendering[10] || "",
@@ -244,7 +245,7 @@ class Parser {
 
     if (item_rendering.length < 1) { return false; }
 
-    let item_type = item_rendering[6];
+    let item_type = item_rendering[5];
 
     if (item_type) {
       this.renderAsGroup(group);

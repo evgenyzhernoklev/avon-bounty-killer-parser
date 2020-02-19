@@ -206,11 +206,11 @@ class Parser {
       break;
     }
 
-    let item_price_actual = item_rendering[10] || "",
-        item_price_old    = item_rendering[8]  || "",
+    let item_title_bold   = item_rendering[3]  || "",
         item_description  = item_rendering[4]  || "",
-        item_label        = item_rendering[12] || "",
-        item_title_bold   = item_rendering[3]  || "";
+        item_price_old    = item_rendering[8]  || "",
+        item_price_actual = item_rendering[10] || "",
+        item_label        = item_rendering[12] || "";
 
     let item_list = {
       "ln": [],
@@ -252,23 +252,27 @@ class Parser {
       return false;
     }
 
-    let item_price_actual = item_rendering[10] || "",
-        item_price_old    = item_rendering[8]  || "",
+    let item_ln           = item_rendering[0]  || "",
+        item_title_bold   = item_rendering[3]  || "",
         item_description  = item_rendering[4]  || "",
-        item_ln           = item_rendering[0]  || "",
+        item_price_old    = item_rendering[8]  || "",
+        item_price_actual = item_rendering[10] || "",
+        item_note         = item_rendering[11] || "",
         item_label        = item_rendering[12] || "",
-        item_title_bold   = item_rendering[3]  || "";
+        item_note_info    = item_rendering[15] || "";
 
     let item_single = {
       "price": {
-        "actualCostRub": String(item_price_actual).trim(),
+        "actualCostRub": String(item_price_actual).trim() + String(item_note).trim(),
         "oldCostRub": String(item_price_old).trim()
       },
       "description": String(item_description).trim(),
       "ln": String(item_ln).trim(),
       "label": String(item_label).trim(),
+      "note": String(item_note_info).trim(),
       "boldTitle": String(item_title_bold).trim()
     };
+
     let lines_array = this.bountyKillersData["killers"][this.current_tab]["lines"];
     lines_array[lines_array.length - 1]["offers"].push(item_single);
   }

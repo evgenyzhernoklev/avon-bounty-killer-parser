@@ -102,9 +102,9 @@ class Parser {
       text = text.slice(tab_name_end_position + SPACE);
     }
 
-    let title_end_position = text.search( /\./i );
+    let title_end_position = text.search( /\.|!/i );
 
-    // есть точка, и она не последний символ строки
+    // есть символ '.' или '!', и он не последний символ строки
     if (title_end_position > 0 && title_end_position != (text.length - 1)) {
       title = text.slice(0, title_end_position + SPACE/2);
       condition = text.slice(title_end_position + SPACE);
@@ -210,12 +210,17 @@ class Parser {
         item_description  = item_rendering[4]  || "",
         item_price_old    = item_rendering[8]  || "",
         item_price_actual = item_rendering[10] || "",
-        item_label        = item_rendering[12] || "";
+        item_note         = item_rendering[11] || "",
+        item_label        = item_rendering[12] || "",
+        item_note_info    = item_rendering[15] || "";
 
     let item_list = {
+      "label": String(item_label).trim(),
+      "boldTitle": String(item_title_bold).trim(),
+      "description": String(item_description).trim(),
       "ln": [],
       "price": {
-          "actualCostRub": String(item_price_actual).trim(),
+          "actualCostRub": String(item_price_actual).trim() + String(item_note).trim(),
           "oldCostRub": String(item_price_old).trim()
       },
       "variantsType": item_type,
@@ -224,9 +229,7 @@ class Parser {
           "chosenTitle": chosenTitle,
           "variantsText": []
       },
-      "description": String(item_description).trim(),
-      "label": String(item_label).trim(),
-      "boldTitle": String(item_title_bold).trim()
+      "note": String(item_note_info).trim()
     };
 
     group.forEach(function(item, index, group) {
@@ -262,15 +265,15 @@ class Parser {
         item_note_info    = item_rendering[15] || "";
 
     let item_single = {
+      "label": String(item_label).trim(),
+      "boldTitle": String(item_title_bold).trim(),
+      "description": String(item_description).trim(),
+      "ln": String(item_ln).trim(),
       "price": {
         "actualCostRub": String(item_price_actual).trim() + String(item_note).trim(),
         "oldCostRub": String(item_price_old).trim()
       },
-      "description": String(item_description).trim(),
-      "ln": String(item_ln).trim(),
-      "label": String(item_label).trim(),
-      "note": String(item_note_info).trim(),
-      "boldTitle": String(item_title_bold).trim()
+      "note": String(item_note_info).trim()
     };
 
     let lines_array = this.bountyKillersData["killers"][this.current_tab]["lines"];

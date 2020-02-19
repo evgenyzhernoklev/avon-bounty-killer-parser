@@ -34245,6 +34245,8 @@ function () {
           item_note = item_rendering[11] || "",
           item_label = item_rendering[12] || "",
           item_note_info = item_rendering[15] || "";
+      item_price_old ? item_price_old += "₽" : "";
+      item_price_actual ? item_price_actual += "₽" : "";
       var item_list = {
         "label": String(item_label).trim(),
         "boldTitle": String(item_title_bold).trim(),
@@ -34294,6 +34296,8 @@ function () {
           item_note = item_rendering[11] || "",
           item_label = item_rendering[12] || "",
           item_note_info = item_rendering[15] || "";
+      item_price_old ? item_price_old += "₽" : "";
+      item_price_actual ? item_price_actual += "₽" : "";
       var item_single = {
         "label": String(item_label).trim(),
         "boldTitle": String(item_title_bold).trim(),

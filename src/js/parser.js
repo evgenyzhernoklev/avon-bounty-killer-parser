@@ -216,6 +216,7 @@ class Parser {
 
     (item_price_old)      ? item_price_old    += "₽" : "";
     (item_price_actual)   ? item_price_actual += "₽" : "";
+    (item_note_info)      ? item_note_info     = (String(item_note).trim() + ' ' + String(item_note_info).trim()) : "";
 
     let item_list = {
       "label": String(item_label).trim(),
@@ -232,7 +233,7 @@ class Parser {
           "chosenTitle": chosenTitle,
           "variantsText": []
       },
-      "note": String(item_note).trim() + ' ' + String(item_note_info).trim()
+      "note": item_note_info
     };
 
     group.forEach(function(item, index, group) {
@@ -269,6 +270,7 @@ class Parser {
 
     (item_price_old)      ? item_price_old    += "₽" : "";
     (item_price_actual)   ? item_price_actual += "₽" : "";
+    (item_note_info)      ? item_note_info     = (String(item_note).trim() + ' ' + String(item_note_info).trim()) : "";
 
     let item_single = {
       "label": String(item_label).trim(),
@@ -279,7 +281,7 @@ class Parser {
         "actualCostRub": String(item_price_actual).trim() + String(item_note).trim(),
         "oldCostRub": String(item_price_old).trim()
       },
-      "note": String(item_note).trim() + ' ' + String(item_note_info).trim()
+      "note": item_note_info
     };
 
     let lines_array = this.bountyKillersData["killers"][this.current_tab]["lines"];

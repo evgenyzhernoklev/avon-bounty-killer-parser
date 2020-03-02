@@ -232,7 +232,7 @@ class Parser {
           "chosenTitle": chosenTitle,
           "variantsText": []
       },
-      "note": String(item_note).trim() + String(item_note_info).trim()
+      "note": String(item_note).trim() + ' ' + String(item_note_info).trim()
     };
 
     group.forEach(function(item, index, group) {
@@ -279,7 +279,7 @@ class Parser {
         "actualCostRub": String(item_price_actual).trim() + String(item_note).trim(),
         "oldCostRub": String(item_price_old).trim()
       },
-      "note": String(item_note).trim() + String(item_note_info).trim()
+      "note": String(item_note).trim() + ' ' + String(item_note_info).trim()
     };
 
     let lines_array = this.bountyKillersData["killers"][this.current_tab]["lines"];

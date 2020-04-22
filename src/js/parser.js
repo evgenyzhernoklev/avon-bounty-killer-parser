@@ -151,7 +151,6 @@ class Parser {
         {
           "title": title,
           "condition": condition,
-          "rows": 3,
           "offers": []
         }
       ],
@@ -171,7 +170,6 @@ class Parser {
     let new_subsection = {
       "title": title,
       "condition": condition,
-      "rows": 3,
       "offers": []
     };
 

@@ -2,7 +2,10 @@
 
 class Parser {
   constructor(array) {
-    this.array = array;
+    this.array  = array;
+    this.group  = [];
+    this.hashes = [];
+    this.hash   = "";
     this.bountyKillersData = {
       "header": {
         "title": "",
@@ -11,9 +14,6 @@ class Parser {
       "nav": [],
       "killers": []
     };
-    this.current_tab = -1;
-    this.group = [];
-    this.hashes = [];
     this.init();
   }
 
@@ -86,13 +86,12 @@ class Parser {
 
     condition = title.search( /!/i );
     condition = title.slice(condition + SPACE);
-    this.bountyKillersData["killers"][this.current_tab]["condition"] = condition;
+    this.bountyKillersData["killers"][this.currentTab()]["condition"] = condition;
   }
 
   parseAsTitle(item) {
     const SPACE = 2; // symbol + space
     let text = item[0],
-        hash = "",
         tab_name_end_position = text.search( /:/i ),
         tab_name = text.slice(0, tab_name_end_position),
         title = "",
@@ -115,36 +114,36 @@ class Parser {
     switch(tab_name) {
       case "Макияж":
       case "Все для макияжа":
-        hash = "makeup";
+        this.hash = "makeup";
         break;
       case "Ароматы":
-        hash = "fragrance";
+        this.hash = "fragrance";
         break;
       case "Уход":
       case "Уход за телом и лицом":
-        hash = "care";
+        this.hash = "care";
         break;
       case "Уход за лицом":
       case "Средства по уходу за лицом":
-        hash = "face";
+        this.hash = "face";
         break;
       case "Мода и стиль":
-        hash = "style";
+        this.hash = "style";
         break;
       case "Мастера Бижутерии":
-        hash = "jewelery";
+        this.hash = "jewelery";
         break;
       default:
-        hash = "goods"
+        this.hash = "goods";
         break;
     }
 
-    if ( ~this.hashes.indexOf(hash) ) {
+    if (~this.currentTab()) {
       this.addSubsection(title, condition);
       return false;
     }
 
-    this.hashes.push(hash);
+    this.hashes.push(this.hash);
 
     let new_section = {
       "lines": [
@@ -158,12 +157,11 @@ class Parser {
     };
     let new_tab = {
       "navText": tab_name,
-      "navHash": hash
+      "navHash": this.hash
     };
 
     this.bountyKillersData["nav"].push(new_tab);
     this.bountyKillersData["killers"].push(new_section);
-    this.current_tab += 1;
   }
 
   addSubsection(title, condition) {
@@ -173,7 +171,7 @@ class Parser {
       "offers": []
     };
 
-    this.bountyKillersData["killers"][this.current_tab]["lines"].push(new_subsection);
+    this.bountyKillersData["killers"][this.currentTab()]["lines"].push(new_subsection);
   }
 
   is_oneGroup(item_prev, item) {
@@ -241,7 +239,7 @@ class Parser {
       item_list["variants"]["variantsText"].push(String(variants_text).trim());
     });
 
-    let lines_array = this.bountyKillersData["killers"][this.current_tab]["lines"];
+    let lines_array = this.bountyKillersData["killers"][this.currentTab()]["lines"];
     lines_array[lines_array.length - 1]["offers"].push(item_list);
   }
 
@@ -282,8 +280,12 @@ class Parser {
       "note": item_note_info
     };
 
-    let lines_array = this.bountyKillersData["killers"][this.current_tab]["lines"];
+    let lines_array = this.bountyKillersData["killers"][this.currentTab()]["lines"];
     lines_array[lines_array.length - 1]["offers"].push(item_single);
+  }
+
+  currentTab() {
+    return this.hashes.indexOf(this.hash);
   }
 
   prepareFile() {

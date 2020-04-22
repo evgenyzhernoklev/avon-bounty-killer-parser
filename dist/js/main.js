@@ -34120,7 +34120,7 @@ function () {
 
       var text = item[0],
           tab_name_end_position = text.search(/:/i),
-          tab_name = text.slice(0, tab_name_end_position),
+          tab_name = ~tab_name_end_position ? text.slice(0, tab_name_end_position) : "",
           title = "",
           condition = "";
 
@@ -34166,7 +34166,7 @@ function () {
           break;
 
         default:
-          this.hash = "goods";
+          this.hash = this.addDefaultHash(tab_name);
           break;
       }
 
@@ -34261,7 +34261,7 @@ function () {
         },
         "note": item_note_info
       };
-      group.forEach(function (item, index, group) {
+      group.forEach(function (item) {
         var variants_text = item[6] || "";
         item_list["ln"].push(String(item[0]).trim());
         item_list["variants"]["variantsText"].push(String(variants_text).trim());
@@ -34314,6 +34314,31 @@ function () {
     key: "currentTab",
     value: function currentTab() {
       return this.hashes.indexOf(this.hash);
+    }
+  }, {
+    key: "addDefaultHash",
+    value: function addDefaultHash(tab_name) {
+      var hash = "goods",
+          digit = 0,
+          result = this.bountyKillersData["nav"].find(function (item) {
+        return item["navText"] == tab_name;
+      });
+
+      if (result) {
+        return result["navHash"];
+      }
+
+      this.hashes.forEach(function (item) {
+        if (~item.indexOf('goods')) {
+          digit += 1;
+        }
+      });
+
+      if (digit) {
+        hash += '_' + digit;
+      }
+
+      return hash;
     }
   }, {
     key: "prepareFile",

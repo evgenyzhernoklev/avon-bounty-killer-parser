@@ -80,8 +80,8 @@ class Parser {
   }
 
   parseAsCondition(item) {
-    const SPACE = 2; // 2 = symbol + space
-    let title = item[0],
+    const SPACE   = 2; // 2 = symbol + space
+    let title     = item[0],
         condition = "";
 
     condition = title.search( /!/i );
@@ -90,12 +90,12 @@ class Parser {
   }
 
   parseAsTitle(item) {
-    const SPACE = 2; // symbol + space
-    let text = item[0],
+    const SPACE               = 2; // symbol + space
+    let text                  = item[0],
         tab_name_end_position = text.search( /:/i ),
-        tab_name = text.slice(0, tab_name_end_position),
-        title = "",
-        condition = "";
+        tab_name              = (~tab_name_end_position) ? text.slice(0, tab_name_end_position) : "",
+        title                 = "",
+        condition             = "";
 
     if (tab_name_end_position > 0) {
       text = text.slice(tab_name_end_position + SPACE);
@@ -134,7 +134,7 @@ class Parser {
         this.hash = "jewelery";
         break;
       default:
-        this.hash = "goods";
+        this.hash = this.addDefaultHash(tab_name);
         break;
     }
 
@@ -179,10 +179,10 @@ class Parser {
   }
 
   renderAsGroup(group) {
-    let item_rendering = group[0],
-        item_type = String(item_rendering[5]).trim().toLowerCase() || "",
-        title = "",
-        chosenTitle = "";
+    let item_rendering  = group[0],
+        item_type       = String(item_rendering[5]).trim().toLowerCase() || "",
+        title           = "",
+        chosenTitle     = "";
 
     switch(item_type) {
       case "цвет":
@@ -232,7 +232,7 @@ class Parser {
       "note": item_note_info
     };
 
-    group.forEach(function(item, index, group) {
+    group.forEach(function(item) {
       let variants_text = item[6] || "";
 
       item_list["ln"].push(String(item[0]).trim());
@@ -286,6 +286,28 @@ class Parser {
 
   currentTab() {
     return this.hashes.indexOf(this.hash);
+  }
+
+  addDefaultHash(tab_name) {
+    let hash    = "goods",
+        digit   = 0,
+        result  = this.bountyKillersData["nav"].find(function(item) {
+          return item["navText"] == tab_name;
+        });
+
+    if (result) { return result["navHash"]; }
+
+    this.hashes.forEach(function(item) {
+      if (~item.indexOf('goods')) {
+        digit += 1;
+      }
+    });
+
+    if (digit) {
+      hash += '_' + digit;
+    }
+
+    return hash;
   }
 
   prepareFile() {

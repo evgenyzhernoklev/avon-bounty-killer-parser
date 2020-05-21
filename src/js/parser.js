@@ -200,6 +200,10 @@ class Parser {
         item_type   = "set";
         title       = "Состав набора";
       break;
+      case "выбрать букву":
+        item_type   = "letter";
+        title       = "Выбранная буква";
+      break;
     }
 
     let item_title_bold   = item_rendering[3]  || "",
@@ -240,6 +244,10 @@ class Parser {
 
     group.forEach(function(item) {
       let variants_text = item[6] || "";
+
+      if (variants_text && item_type == "letter") {
+        variants_text = variants_text.replace(/"/g, "");
+      }
 
       item_list["ln"].push(String(item[0]).trim());
       item_list["variants"]["variantsText"].push(String(variants_text).trim());

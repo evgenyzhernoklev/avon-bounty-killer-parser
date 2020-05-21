@@ -207,8 +207,14 @@ class Parser {
         item_price_old    = item_rendering[8]  || "",
         item_price_actual = item_rendering[10] || "",
         item_note         = item_rendering[11] || "",
+        item_note_counter = +item_note,
         item_label        = item_rendering[12] || "",
         item_note_info    = item_rendering[15] || "";
+
+    item_note = "";
+    for (let i = 0; i < item_note_counter; i++) {
+      item_note += "*";
+    }
 
     (item_price_old)      ? item_price_old    += "₽" : "";
     (item_price_actual)   ? item_price_actual += "₽" : "";
@@ -261,8 +267,14 @@ class Parser {
         item_price_old    = item_rendering[8]  || "",
         item_price_actual = item_rendering[10] || "",
         item_note         = item_rendering[11] || "",
+        item_note_counter = +item_note,
         item_label        = item_rendering[12] || "",
         item_note_info    = item_rendering[15] || "";
+
+    item_note = "";
+    for (let i = 0; i < item_note_counter; i++) {
+      item_note += "*";
+    }
 
     (item_price_old)      ? item_price_old    += "₽" : "";
     (item_price_actual)   ? item_price_actual += "₽" : "";

@@ -269,7 +269,7 @@ class Parser {
       return false;
     }
 
-    let item_ln           = item_rendering[0]  || "",
+    let item_ln           = item_rendering[1]  || "",
         item_title_bold   = item_rendering[3]  || "",
         item_description  = item_rendering[4]  || "",
         item_price_old    = item_rendering[8]  || "",
@@ -292,7 +292,7 @@ class Parser {
       "label": String(item_label).trim(),
       "boldTitle": String(item_title_bold).trim(),
       "description": String(item_description).trim(),
-      "ln": String(item_ln).trim(),
+      "ln": "prod_" + String(item_ln).trim() + "_1",
       "price": {
         "actualCostRub": String(item_price_actual).trim() + String(item_note).trim(),
         "oldCostRub": String(item_price_old).trim()

@@ -243,13 +243,17 @@ class Parser {
     };
 
     group.forEach(function(item) {
-      let variants_text = item[6] || "";
+      let variants_text = item[6] || "",
+          item_ln       = item[0] || "";
 
-      if (variants_text && item_type == "letter") {
+      if (item_type == "set") {
+        item_ln = "prod_" + item_ln + "aa_1";
+      }
+      if (item_type == "letter" && variants_text) {
         variants_text = variants_text.replace(/"/g, "");
       }
 
-      item_list["ln"].push(String(item[0]).trim());
+      item_list["ln"].push(String(item_ln).trim());
       item_list["variants"]["variantsText"].push(String(variants_text).trim());
     });
 

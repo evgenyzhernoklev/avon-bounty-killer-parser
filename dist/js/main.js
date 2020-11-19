@@ -34332,13 +34332,18 @@ var Parser = /*#__PURE__*/function () {
         "note": item_note_info
       };
       group.forEach(function (item) {
-        var variants_text = item[6] || "";
+        var variants_text = item[6] || "",
+            item_ln = item[0] || "";
 
-        if (variants_text && item_type == "letter") {
+        if (item_type == "set") {
+          item_ln = "prod_" + item_ln + "aa_1";
+        }
+
+        if (item_type == "letter" && variants_text) {
           variants_text = variants_text.replace(/"/g, "");
         }
 
-        item_list["ln"].push(String(item[0]).trim());
+        item_list["ln"].push(String(item_ln).trim());
         item_list["variants"]["variantsText"].push(String(variants_text).trim());
       });
       var lines_array = this.bountyKillersData["killers"][this.currentTab()]["lines"];

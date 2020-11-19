@@ -68,13 +68,6 @@ class Parser {
       }
     });
 
-    // if we remain nav empty there will be some error during server parsing
-    // and it won't show any goods
-    // => remove "nav" key if there's only one tab
-    if (this.bountyKillersData["nav"].length < 2) {
-      delete this.bountyKillersData["nav"];
-    }
-
     this.prepareFile();
     console.log(this.bountyKillersData);
   }
@@ -188,12 +181,12 @@ class Parser {
       case "цвет":
       case "оттенок":
         item_type   = "colors";
-        title       = "Оттенки";
+        title       = "Выберите оттенок";
         chosenTitle = "Выбранный оттенок";
         break;
       case "размер":
         item_type   = "sizes";
-        title       = "Размеры";
+        title       = "Выберите размер";
         chosenTitle = "Выбранный размер";
       break;
       case "состав набора":
@@ -202,11 +195,13 @@ class Parser {
       break;
       case "выбрать букву":
         item_type   = "letter";
-        title       = "Выбранная буква";
+        title       = "Выберите букву";
+        chosenTitle = "Выбранная буква";
       break;
     }
 
-    let item_title_bold   = item_rendering[3]  || "",
+    let item_img          = (item_type == "set") ? (item_rendering[0] || "") : (item_rendering[1] || ""),
+        item_title_bold   = item_rendering[3]  || "",
         item_description  = item_rendering[4]  || "",
         item_price_old    = item_rendering[8]  || "",
         item_price_actual = item_rendering[10] || "",
@@ -226,35 +221,36 @@ class Parser {
 
     let item_list = {
       "label": String(item_label).trim(),
-      "boldTitle": String(item_title_bold).trim(),
+      "title": String(item_title_bold).trim(),
       "description": String(item_description).trim(),
-      "ln": [],
+      "image": (item_type == "set") ? ("prod_" + String(item_img).trim() + "aa_1") : ("prod_" + String(item_img).trim() + "_1"),
+      "codes": [],
+      "fsc": [],
       "price": {
-          "actualCostRub": String(item_price_actual).trim() + String(item_note).trim(),
-          "oldCostRub": String(item_price_old).trim()
+          "actual": String(item_price_actual).trim() + String(item_note).trim(),
+          "old": String(item_price_old).trim()
       },
-      "variantsType": item_type,
+      "type": item_type,
       "variants": {
           "title": title,
           "chosenTitle": chosenTitle,
-          "variantsText": []
+          "text": []
       },
       "note": item_note_info
     };
 
     group.forEach(function(item) {
-      let variants_text = item[6] || "",
-          item_ln       = item[0] || "";
+      let item_code     = item[0] || "",
+          item_fsc      = item[2] || "",
+          variants_text = item[6] || "";
 
-      if (item_type == "set") {
-        item_ln = "prod_" + String(item_ln).trim() + "aa_1";
-      }
       if (item_type == "letter" && variants_text) {
         variants_text = variants_text.replace(/"/g, "");
       }
 
-      item_list["ln"].push(String(item_ln).trim());
-      item_list["variants"]["variantsText"].push(String(variants_text).trim());
+      item_list["codes"].push(String(item_code).trim());
+      item_list["fsc"].push(String(item_fsc).trim());
+      item_list["variants"]["text"].push(String(variants_text).trim());
     });
 
     let lines_array = this.bountyKillersData["killers"][this.currentTab()]["lines"];
@@ -273,7 +269,8 @@ class Parser {
       return false;
     }
 
-    let item_ln           = item_rendering[1]  || "",
+    let item_code         = item_rendering[0]  || "",
+        item_img          = item_rendering[1]  || "",
         item_title_bold   = item_rendering[3]  || "",
         item_description  = item_rendering[4]  || "",
         item_price_old    = item_rendering[8]  || "",
@@ -294,12 +291,13 @@ class Parser {
 
     let item_single = {
       "label": String(item_label).trim(),
-      "boldTitle": String(item_title_bold).trim(),
+      "title": String(item_title_bold).trim(),
       "description": String(item_description).trim(),
-      "ln": "prod_" + String(item_ln).trim() + "_1",
+      "image": "prod_" + String(item_img).trim() + "_1",
+      "codes": [String(item_code).trim()],
       "price": {
-        "actualCostRub": String(item_price_actual).trim() + String(item_note).trim(),
-        "oldCostRub": String(item_price_old).trim()
+        "actual": String(item_price_actual).trim() + String(item_note).trim(),
+        "old": String(item_price_old).trim()
       },
       "note": item_note_info
     };

@@ -247,7 +247,7 @@ class Parser {
           item_ln       = item[0] || "";
 
       if (item_type == "set") {
-        item_ln = "prod_" + item_ln + "aa_1";
+        item_ln = "prod_" + String(item_ln).trim() + "aa_1";
       }
       if (item_type == "letter" && variants_text) {
         variants_text = variants_text.replace(/"/g, "");
